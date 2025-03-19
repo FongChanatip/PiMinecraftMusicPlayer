@@ -30,5 +30,5 @@ pub fn get_pacific_minute(cur_dt: DateTime<chrono_tz::Tz>) -> i8 {
 }
 pub fn get_time_of_day(cur_hour: i8, cur_min: i8) -> f32 {
     let cur_time: f32 = cur_hour as f32 + (cur_min as f32 / 60.);
-    return cur_time;
+    cur_time
 }
