@@ -5,10 +5,10 @@ use serde_json::Value;
 
 #[derive(Debug)]
 pub struct Weather {
-    is_daytime: bool,
-    temperature: i16,
-    probability_precipitation: f32,
-    short_forecast: String,
+    pub is_daytime: bool,
+    pub temperature: i16,
+    pub probability_precipitation: f32,
+    pub short_forecast: String,
 }
 
 pub async fn get_weather_data() -> Result<Weather, Box<dyn std::error::Error>> {
