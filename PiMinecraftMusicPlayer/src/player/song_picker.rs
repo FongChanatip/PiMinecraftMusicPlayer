@@ -1,7 +1,10 @@
+use crate::external_factors;
+
 use dotenv::dotenv;
 use serde::Deserialize;
 use core::f32;
 use std::{env, fs, io::BufReader, ops::Deref};
+use external_factors::{ExternalFactors, get_external_factors};
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
@@ -24,7 +27,6 @@ struct MoodScores {
     mysterious: f32,
     relaxing: f32,
 }
-
 
 fn sigmoid(x: f32) -> f32 {
     1.0 / (1.0 + (-x).exp())
@@ -59,9 +61,77 @@ pub fn load_song_data() -> Vec<Song>{
     songs
 }
 
-pub fn map_factors_to_mood(){
-    // TODO
+fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
+    let mut combined_mood = MoodScores::default();
+    let mut count = 0;
+
+    let mut weather_mood = MoodScores::default();
+    weather_mood.happy += sigmoid((factors.weather.temperature as f32 - 60.0) / 10.0);
+    weather_mood.nostalgic += 1.0 - sigmoid((factors.weather.temperature as f32 - 60.0) / 10.0);
+    weather_mood.melancholic += factors.weather.probability_precipitation;
+    weather_mood.relaxing += 1.0 - factors.weather.probability_precipitation;
+
+    if factors.weather.is_daytime {
+        weather_mood.happy += 0.3;
+        weather_mood.hopeful += 0.3;
+    } else {
+        weather_mood.mysterious += 0.3;
+        weather_mood.relaxing += 0.3;
+    }
+    if factors.weather.short_forecast.contains("Cloudy") {
+        weather_mood.nostalgic += 0.2;
+        weather_mood.melancholic += 0.2;
+    } else if factors.weather.short_forecast.contains("Clear") || factors.weather.short_forecast.contains("Sunny") {
+        weather_mood.happy += 0.2;
+        weather_mood.hopeful += 0.2;
+    }
+
+    combined_mood = sum_moods(combined_mood, normalize(weather_mood));
+    count += 1;
+
+    // Time-of-day mood
+    let time_mood = match factors.time.hour {
+        5..=11 => MoodScores { happy: 0.5, hopeful: 0.5, ..Default::default() },
+        12..=14 => MoodScores { happy: 0.4, relaxing: 0.6, ..Default::default() },
+        15..=17 => MoodScores { nostalgic: 0.5, relaxing: 0.5, ..Default::default() },
+        18..=21 => MoodScores { relaxing: 0.6, melancholic: 0.4, ..Default::default() },
+        _ => MoodScores { mysterious: 0.7, melancholic: 0.3, ..Default::default() },
+    };
+    combined_mood = sum_moods(combined_mood, normalize(time_mood));
+    count += 1;
+
+    // Season mood
+    let season_mood = match factors.time.season.as_str() {
+        "winter" => MoodScores { nostalgic: 1.0, ..Default::default() },
+        "spring" => MoodScores { hopeful: 1.0, ..Default::default() },
+        "summer" => MoodScores { happy: 1.0, ..Default::default() },
+        "fall" => MoodScores { relaxing: 1.0, ..Default::default() },
+        _ => MoodScores::default(),
+    };
+    combined_mood = sum_moods(combined_mood, season_mood);
+    count += 1;
+
+    // Market mood
+    let market_mood = MoodScores {
+        hopeful: sigmoid(factors.market.spy),
+        melancholic: 1.0 - sigmoid(factors.market.spy),
+        mysterious: sigmoid(-factors.market.btc),
+        happy: sigmoid(factors.market.btc),
+        ..Default::default()
+    };
+    combined_mood = sum_moods(combined_mood, normalize(market_mood));
+    count += 1;
+
+    // Mercury Retrograde mood
+    if factors.mercury_retrograde {
+        let mercury_mood = MoodScores { mysterious: 0.7, melancholic: 0.3, ..Default::default() };
+        combined_mood = sum_moods(combined_mood, mercury_mood);
+        count += 1;
+    }
+
+    normalize(average_mood(combined_mood, count))
 }
+
 
 pub fn get_min_dist_to_song_index(current_mood: MoodScores, songs: Vec<Song>) -> i16{
 
@@ -106,4 +176,26 @@ fn euclidean_distance(mood1: &MoodScores, mood2: &MoodScores) -> f32{
 
     sum.sqrt()
     
+}
+
+fn sum_moods(a: MoodScores, b: MoodScores) -> MoodScores {
+    MoodScores {
+        happy: a.happy + b.happy,
+        melancholic: a.melancholic + b.melancholic,
+        hopeful: a.hopeful + b.hopeful,
+        nostalgic: a.nostalgic + b.nostalgic,
+        mysterious: a.mysterious + b.mysterious,
+        relaxing: a.relaxing + b.relaxing,
+    }
+}
+
+fn average_mood(mood: MoodScores, count: usize) -> MoodScores {
+    MoodScores {
+        happy: mood.happy / count as f32,
+        melancholic: mood.melancholic / count as f32,
+        hopeful: mood.hopeful / count as f32,
+        nostalgic: mood.nostalgic / count as f32,
+        mysterious: mood.mysterious / count as f32,
+        relaxing: mood.relaxing / count as f32,
+    }
 }
