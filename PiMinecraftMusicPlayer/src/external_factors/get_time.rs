@@ -32,3 +32,9 @@ pub fn get_time_of_day(cur_hour: i8, cur_min: i8) -> f32 {
     let cur_time: f32 = cur_hour as f32 + (cur_min as f32 / 60.);
     cur_time
 }
+
+// Count fri,sat,sun as weekend
+pub fn is_weekend(cur_dt: DateTime<chrono_tz::Tz>) -> bool {
+    let day = cur_dt.weekday().num_days_from_monday();
+    return day == 4 || day == 5 || day == 6;
+}
