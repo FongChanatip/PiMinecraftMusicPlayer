@@ -12,10 +12,10 @@
         "track": "Door",
         "happy": 0.5,
         "melancholic": 0,
-        "hopeful": 0,
+        "hopeful": 0.5,
         "nostalgic": 0,
         "mysterious": 0,
-        "relaxing": 0.5
+        "relaxing": 0.0
     },
     {
         "track": "Subwoofer Lullaby",
