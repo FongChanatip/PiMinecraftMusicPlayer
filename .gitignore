@@ -9,3 +9,6 @@ target/
 .env
 
 src/Cargo.lock
+
+PiMinecraftMusicPlayer/music
+

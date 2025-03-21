@@ -32,7 +32,8 @@ pub fn play_mp3(path: &String){
     }
 
     let output = cmd
-        .arg("-o pulse")
+        .arg("-o")
+        .arg("pulse")
         .arg(path)
         .output()
         .expect("Failed to execute mpg123");
