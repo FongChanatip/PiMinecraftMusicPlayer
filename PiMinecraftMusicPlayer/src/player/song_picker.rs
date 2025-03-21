@@ -181,6 +181,7 @@ pub fn get_min_dist_to_song_index(current_mood: MoodScores, songs: Vec<Song>) ->
         let song_mood = song_to_mood_scores(song);
         let dist = euclidean_distance(&current_mood, &song_mood);
         let rand: f64 = rng.random();
+        println!("{dist}");
         if dist < min{
             min = dist;
             min_idx = i;

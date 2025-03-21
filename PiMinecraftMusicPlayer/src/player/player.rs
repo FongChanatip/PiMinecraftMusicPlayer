@@ -1,4 +1,5 @@
 use dotenv::dotenv;
+use std::process::ExitStatus;
 use std::{env, process::Command};
 use std::path::Path;
 use super::song_picker::get_best_song;
@@ -19,9 +20,28 @@ pub async fn play_song(){
 }
 
 pub fn play_mp3(path: &String){
-    Command::new("mpg123")
-        .arg("-v")
+    let mpg123: String = env::var("MPG123_PATH")
+        .expect("SONG_JSON_PATH must be set.")
+        .parse()
+        .unwrap();
+
+    let mut cmd = Command::new(mpg123);
+
+    if let Ok(xdg_runtime_dir) = env::var("XDG_RUNTIME_DIR") {
+        cmd.env("XDG_RUNTIME_DIR", xdg_runtime_dir);
+    }
+
+    let output = cmd
+        .arg("-o pulse")
         .arg(path)
-        .status()
-        .expect("failed to play song");
+        .output()
+        .expect("Failed to execute mpg123");
+
+    if !output.status.success() {
+        eprintln!("mpg123 exited with status: {}", output.status);
+        eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+        eprintln!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+    } else {
+        println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+    }
 }

@@ -22,8 +22,8 @@
         "happy": 0,
         "melancholic": 0,
         "hopeful": 0,
-        "nostalgic": 0.25,
-        "mysterious": 0.25,
+        "nostalgic": 0.5,
+        "mysterious": 0.0,
         "relaxing": 0.5
     },
     {
