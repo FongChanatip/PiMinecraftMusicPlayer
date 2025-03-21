@@ -3,10 +3,18 @@ use crate::external_factors;
 use core::f32;
 use dotenv::dotenv;
 use external_factors::{ExternalFactors, get_external_factors};
+use once_cell::sync::Lazy;
 use rand::Rng;
 use rand_distr::Distribution;
 use serde::Deserialize;
+use std::collections::HashMap;
+use std::sync::Mutex;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use std::{env, fs, io::BufReader};
+
+static RECENT_SONGS: Lazy<Mutex<HashMap<usize, u64>>> = Lazy::new(|| Mutex::new(HashMap::new()));
+
+const EXCLUSION_HOURS: u64 = 6;
 
 pub const SONGS: [&str; 54] = [
     "01 - Key.mp3",
@@ -87,6 +95,75 @@ struct MoodScores {
     relaxing: f32,
 }
 
+fn load_recent_songs() {
+    use std::fs::File;
+    use std::io::{BufRead, BufReader};
+
+    let mut recent_songs = RECENT_SONGS.lock().unwrap();
+    let file_path = "recent_songs.txt";
+
+    if let Ok(file) = File::open(file_path) {
+        let reader = BufReader::new(file);
+        for line in reader.lines() {
+            if let Ok(line) = line {
+                let parts: Vec<&str> = line.split(',').collect();
+                if parts.len() == 2 {
+                    if let (Ok(idx), Ok(timestamp)) =
+                        (parts[0].parse::<usize>(), parts[1].parse::<u64>())
+                    {
+                        recent_songs.insert(idx, timestamp);
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn save_recent_songs() {
+    use std::fs::File;
+    use std::io::Write;
+
+    let recent_songs = RECENT_SONGS.lock().unwrap();
+    let file_path = "recent_songs.txt";
+
+    if let Ok(mut file) = File::create(file_path) {
+        for (idx, timestamp) in recent_songs.iter() {
+            if let Err(e) = writeln!(file, "{},{}", idx, timestamp) {
+                eprintln!("Failed to write to recent songs file: {}", e);
+            }
+        }
+    }
+}
+
+fn record_played_song(idx: usize) {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or(Duration::from_secs(0))
+        .as_secs();
+
+    let mut recent_songs = RECENT_SONGS.lock().unwrap();
+    recent_songs.insert(idx, now);
+
+    recent_songs.retain(|_, &mut timestamp| now - timestamp < EXCLUSION_HOURS * 3600);
+
+    drop(recent_songs);
+    save_recent_songs();
+}
+
+fn is_recently_played(idx: usize) -> bool {
+    let recent_songs = RECENT_SONGS.lock().unwrap();
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or(Duration::from_secs(0))
+        .as_secs();
+
+    if let Some(&timestamp) = recent_songs.get(&idx) {
+        now - timestamp < EXCLUSION_HOURS * 3600
+    } else {
+        false
+    }
+}
+
 fn sigmoid(x: f32) -> f32 {
     1.0 / (1.0 + (-x).exp())
 }
@@ -121,14 +198,42 @@ pub fn load_song_data() -> Vec<Song> {
     let reader = BufReader::new(file);
     let songs: Vec<Song> = serde_json::from_reader(reader).unwrap();
 
+    if songs.len() != SONGS.len() {
+        println!(
+            "Warning: JSON song count ({}) doesn't match SONGS array ({})",
+            songs.len(),
+            SONGS.len()
+        );
+    }
+
+    for (i, song) in songs.iter().enumerate() {
+        if i < SONGS.len() {
+            println!("Song {}: JSON='{}', Filename='{}'", i, song.track, SONGS[i]);
+        }
+    }
+
     songs
 }
 
+fn get_song_index_by_track(track: &str, songs: &[Song]) -> Option<usize> {
+    for (i, song) in songs.iter().enumerate() {
+        if SONGS[i].to_lowercase().contains(&song.track.to_lowercase()) {
+            return Some(i);
+        }
+    }
+    None
+}
+
 pub async fn get_best_song() -> String {
+    load_recent_songs();
+
     let factors = get_external_factors().await;
     let cur_mood = map_factors_to_mood(factors);
     let songs_mood = load_song_data();
     let best_idx = get_min_dist_to_song_index(cur_mood, songs_mood);
+
+    record_played_song(best_idx as usize);
+
     return SONGS.get(best_idx as usize).unwrap().to_string();
 }
 
@@ -162,7 +267,6 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
     combined_mood = sum_moods(combined_mood, normalize(weather_mood));
     count += 1;
 
-    // Time-of-day mood
     let time_mood = match factors.time.hour {
         5..=11 => MoodScores {
             happy: 0.5,
@@ -193,7 +297,6 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
     combined_mood = sum_moods(combined_mood, normalize(time_mood));
     count += 1;
 
-    // Season mood
     let season_mood = match factors.time.season.as_str() {
         "winter" => MoodScores {
             nostalgic: 1.0,
@@ -216,7 +319,6 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
     combined_mood = sum_moods(combined_mood, season_mood);
     count += 1;
 
-    // Market mood
     let market_mood = MoodScores {
         hopeful: sigmoid(factors.market.spy),
         melancholic: 1.0 - sigmoid(factors.market.spy),
@@ -227,7 +329,6 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
     combined_mood = sum_moods(combined_mood, normalize(market_mood));
     count += 1;
 
-    // Mercury Retrograde mood
     if factors.mercury_retrograde {
         let mercury_mood = MoodScores {
             mysterious: 0.7,
@@ -244,26 +345,105 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
 pub fn get_min_dist_to_song_index(current_mood: MoodScores, songs: Vec<Song>) -> i16 {
     let mut min: f32 = f32::MAX;
     let mut min_idx: usize = 0;
-    let mut rng = rand::rng();
+    let mut rng = rand::thread_rng();
+
+    let select_first_volume = rng.gen_bool(0.4);
+    let first_volume_boundary = 24;
+
+    let mut candidates: Vec<(usize, f32)> = Vec::new();
 
     for i in 0..songs.len() {
+        if i >= SONGS.len() {
+            break;
+        }
+
+        if select_first_volume && i >= first_volume_boundary {
+            continue;
+        }
+        if !select_first_volume && i < first_volume_boundary && rng.gen_bool(0.7) {
+            continue;
+        }
+
         let song = songs.get(i).unwrap();
         let song_mood = song_to_mood_scores(song);
         let dist = euclidean_distance(&current_mood, &song_mood);
-        let rand: f64 = rng.random();
+
+        println!(
+            "Song {} ({}): Distance = {}, Recently played = {}",
+            i,
+            song.track,
+            dist,
+            is_recently_played(i)
+        );
+
+        if is_recently_played(i) {
+            continue;
+        }
+
+        candidates.push((i, dist));
+
         if dist < min {
             min = dist;
-            min_idx = i;
-        } else if dist == min && rand < 0.33 {
-            min = dist;
-            min_idx = i;
         }
     }
 
+    if candidates.is_empty() {
+        println!("All songs were recently played. Allowing any song.");
+    }
+
+    let threshold = min * 1.2;
+    let filtered_candidates: Vec<(usize, f32)> = candidates
+        .into_iter()
+        .filter(|&(_, dist)| dist <= threshold)
+        .collect();
+
+    println!("Candidates within threshold: {}", filtered_candidates.len());
+
+    if !filtered_candidates.is_empty() {
+        let idx = rng.random_range(0..filtered_candidates.len());
+        min_idx = filtered_candidates[idx].0;
+
+        let song = songs.get(min_idx).unwrap();
+        println!("Selected song: {} (index {})", song.track, min_idx);
+    }
+
+    save_song_selection(min_idx);
+
     return min_idx as i16;
+}
+fn save_song_selection(idx: usize) {
+    use crate::external_factors::get_time;
+    use std::fs::OpenOptions;
+    use std::io::Write;
+
+    let time = get_time::get_pacific_time();
+
+    let timestamp = format!(
+        "{:04}-{:02}-{:02} {:02}:{:02}",
+        time.year, time.month, time.day, time.hour, time.min
+    );
+
+    let song_name = SONGS.get(idx).unwrap_or(&"Unknown");
+
+    let log_entry = format!(
+        "[{}] Selected song index: {} ({}) - Season: {}\n",
+        timestamp, idx, song_name, time.season
+    );
+
+    let file_path = "song_selections.txt";
+    match OpenOptions::new().create(true).append(true).open(file_path) {
+        Ok(mut file) => {
+            if let Err(e) = file.write_all(log_entry.as_bytes()) {
+                eprintln!("Failed to write to log file: {}", e);
+            }
+        }
+        Err(e) => eprintln!("Failed to open log file: {}", e),
+    }
 }
 
 pub fn song_to_mood_scores(song: &Song) -> MoodScores {
+    println!("Matching song: {}", song.track);
+
     MoodScores {
         happy: song.happy,
         melancholic: song.melancholic,
@@ -271,7 +451,6 @@ pub fn song_to_mood_scores(song: &Song) -> MoodScores {
         nostalgic: song.nostalgic,
         mysterious: song.mysterious,
         relaxing: song.relaxing,
-        ..Default::default()
     }
 }
 

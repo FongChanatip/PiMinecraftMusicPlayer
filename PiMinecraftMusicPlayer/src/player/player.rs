@@ -1,10 +1,10 @@
+use super::song_picker::get_best_song;
 use dotenv::dotenv;
+use std::path::Path;
 use std::process::ExitStatus;
 use std::{env, process::Command};
-use std::path::Path;
-use super::song_picker::get_best_song;
 
-pub async fn play_song(){
+pub async fn play_song() {
     dotenv().ok();
 
     let album_path_str: String = env::var("ALBUM_PATH")
@@ -12,14 +12,14 @@ pub async fn play_song(){
         .parse()
         .unwrap();
     let path = Path::new(&album_path_str);
-    
+
     let best_song = get_best_song().await;
     let song_path = path.join(best_song).to_str().unwrap().to_string();
 
     play_mp3(&song_path);
 }
 
-pub fn play_mp3(path: &String){
+pub fn play_mp3(path: &String) {
     let mpg123: String = env::var("MPG123_PATH")
         .expect("SONG_JSON_PATH must be set.")
         .parse()

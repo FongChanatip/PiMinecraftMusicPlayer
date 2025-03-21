@@ -45,8 +45,6 @@ pub async fn get_market_data() -> Result<Market, Box<dyn std::error::Error>> {
         .as_f64()
         .ok_or("Missing btc prev close")? as f32;
 
-    println!("{v_btc_cur_price}");
-    println!("{v_btc_prev_close_price}");
     let spy_percentage =
         ((v_spy_cur_price - v_spy_prev_close_price) / (v_spy_prev_close_price)) * 100.;
     let btc_percentage =

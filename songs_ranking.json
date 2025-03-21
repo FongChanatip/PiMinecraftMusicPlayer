@@ -1,219 +1,219 @@
 [
     {
         "track": "Key",
-        "happy": 0,
-        "melancholic": 0.5,
-        "hopeful": 0,
-        "nostalgic": 0,
+        "happy": 0.0,
+        "melancholic": 0.4,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
         "mysterious": 0.5,
-        "relaxing": 0
+        "relaxing": 0.0
     },
     {
         "track": "Door",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0.5,
-        "nostalgic": 0,
-        "mysterious": 0,
+        "happy": 0.4,
+        "melancholic": 0.1,
+        "hopeful": 0.4,
+        "nostalgic": 0.0,
+        "mysterious": 0.1,
         "relaxing": 0.0
     },
     {
         "track": "Subwoofer Lullaby",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
         "nostalgic": 0.5,
-        "mysterious": 0.0,
-        "relaxing": 0.5
+        "mysterious": 0.1,
+        "relaxing": 0.3
     },
     {
         "track": "Death",
-        "happy": 0,
+        "happy": 0.0,
         "melancholic": 0.5,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0.5,
-        "relaxing": 0
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.4,
+        "relaxing": 0.0
     },
     {
         "track": "Living Mice",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Moog City",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Haggstrom",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Minecraft",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
         "nostalgic": 0.5,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "mysterious": 0.1,
+        "relaxing": 0.3
     },
     {
         "track": "Oxygène",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0.5,
-        "relaxing": 0.5
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.4,
+        "relaxing": 0.4
     },
     {
         "track": "Équinoxe",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0.5,
-        "relaxing": 0.5
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.4,
+        "relaxing": 0.4
     },
     {
         "track": "Mice on Venus",
-        "happy": 0,
-        "melancholic": 0.25,
-        "hopeful": 0,
+        "happy": 0.0,
+        "melancholic": 0.2,
+        "hopeful": 0.0,
         "nostalgic": 0.5,
-        "mysterious": 0,
-        "relaxing": 0.25
+        "mysterious": 0.1,
+        "relaxing": 0.2
     },
     {
         "track": "Dry Hands",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
         "nostalgic": 0.5,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "mysterious": 0.1,
+        "relaxing": 0.3
     },
     {
         "track": "Wet Hands",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
         "nostalgic": 0.5,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "mysterious": 0.1,
+        "relaxing": 0.3
     },
     {
         "track": "Clark",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 1
+        "happy": 0.0,
+        "melancholic": 0.0,
+        "hopeful": 0.0,
+        "nostalgic": 0.0,
+        "mysterious": 0.0,
+        "relaxing": 1.0
     },
     {
         "track": "Chris",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 1
+        "happy": 0.0,
+        "melancholic": 0.0,
+        "hopeful": 0.0,
+        "nostalgic": 0.0,
+        "mysterious": 0.0,
+        "relaxing": 1.0
     },
     {
         "track": "Thirteen",
-        "happy": 0,
-        "melancholic": 0.5,
-        "hopeful": 0,
-        "nostalgic": 0,
+        "happy": 0.0,
+        "melancholic": 0.4,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
         "mysterious": 0.5,
-        "relaxing": 0
+        "relaxing": 0.0
     },
     {
         "track": "Excuse",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Sweden",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
         "nostalgic": 0.5,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "mysterious": 0.1,
+        "relaxing": 0.3
     },
     {
         "track": "Cat",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Dog",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Danny",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
         "nostalgic": 0.5,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "mysterious": 0.1,
+        "relaxing": 0.3
     },
     {
         "track": "Beginning",
-        "happy": 0,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0.5,
-        "relaxing": 0.5
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.4,
+        "relaxing": 0.4
     },
     {
         "track": "Droopy Likes Ricochet",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Droopy Likes Your Face",
-        "happy": 0.5,
-        "melancholic": 0,
-        "hopeful": 0,
-        "nostalgic": 0,
-        "mysterious": 0,
-        "relaxing": 0.5
+        "happy": 0.4,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
     },
     {
         "track": "Ki",
