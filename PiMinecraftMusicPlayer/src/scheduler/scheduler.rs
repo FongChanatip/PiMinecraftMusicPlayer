@@ -62,7 +62,7 @@ fn add_to_crontab(cron_time: Vec<String>) -> bool {
 
 fn get_add_cron_job_command(cron_formatted_time: &String, arg: &String) -> String{
 
-    let cron_command = format!(r#"(crontab -l ; echo "{} ~/PiMinecraftMusicPlayer/MinecraftMusicPlayer {}") | crontab -"#, cron_formatted_time, arg);
+    let cron_command = format!(r#"(crontab -l ; echo "{} ~/MinecraftMusicPlayer.sh {}") | crontab -"#, cron_formatted_time, arg);
 
     cron_command
 
