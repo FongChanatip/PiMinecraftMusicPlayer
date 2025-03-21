@@ -3,7 +3,7 @@ use crate::external_factors;
 use chrono::DateTime;
 use chrono_tz::Tz;
 use external_factors::get_time;
-use std::process::Command;
+use std::{env, fmt::format, process::Command};
 
 use super::random_time_generator::{get_weekend_time, get_weekday_time};
 
@@ -56,6 +56,9 @@ fn add_to_crontab(cron_time: Vec<String>) -> bool {
         success |= run_command(&cmd);
     }
 
+    let keep_alive = get_keep_alive_cmd();
+    success |= run_command(&keep_alive);
+
     return success;
 
 }
@@ -86,4 +89,18 @@ fn time_to_cron(cur_time: DateTime<Tz>, time: f64) -> String{
     let cron_str = format!("{} {} {} {} *", min, hour, day, month);
 
     return cron_str;
+}
+
+fn get_keep_alive_cmd() -> String {
+    let mpg123: String = env::var("MPG123_PATH")
+        .expect("SONG_JSON_PATH must be set.")
+        .parse()
+        .unwrap();
+
+    let silence_path: String = env::var("SILENCE_PATH")
+        .expect("SONG_JSON_PATH must be set.")
+        .parse()
+        .unwrap();
+
+    format!(r#"(crontab -l ; echo "*/5 * * * * {} -o pulse '{}' > ~/keep-alive-log.txt 2>&1") | crontab -"#, mpg123, silence_path)
 }
