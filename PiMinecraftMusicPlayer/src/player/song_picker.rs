@@ -3,8 +3,37 @@ use crate::external_factors;
 use dotenv::dotenv;
 use serde::Deserialize;
 use core::f32;
-use std::{env, fs, io::BufReader, ops::Deref};
+use rand::Rng;
+use rand_distr::Distribution;
+use std::{env, fs, io::BufReader};
 use external_factors::{ExternalFactors, get_external_factors};
+
+pub const SONGS: [&str; 24] = [
+    "01 - Key.mp3",
+    "02 - Door.mp3",
+    "03 - Subwoofer Lullaby.mp3",
+    "04 - Death.mp3",
+    "05 - Living Mice.mp3",
+    "06 - Moog City.mp3",
+    "07 - Haggstrom.mp3",
+    "08 - Minecraft.mp3",
+    "09 - Oxygène.mp3",
+    "10 - Équinoxe.mp3",
+    "11 - Mice on Venus.mp3",
+    "12 - Dry Hands.mp3",
+    "13 - Wet Hands.mp3",
+    "14 - Clark.mp3",
+    "15 - Chris.mp3",
+    "16 - Thirteen.mp3",
+    "17 - Excuse.mp3",
+    "18 - Sweden.mp3",
+    "19 - Cat.mp3",
+    "20 - Dog.mp3",
+    "21 - Danny.mp3",
+    "22 - Beginning.mp3",
+    "23 - Droopy Likes Ricochet.mp3",
+    "24 - Droopy Likes Your Face.mp3",
+];
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
@@ -59,6 +88,14 @@ pub fn load_song_data() -> Vec<Song>{
     let songs: Vec<Song> = serde_json::from_reader(reader).unwrap();
 
     songs
+}
+
+pub async fn get_best_song() -> String {
+    let factors = get_external_factors().await;
+    let cur_mood = map_factors_to_mood(factors);
+    let songs_mood = load_song_data();
+    let best_idx = get_min_dist_to_song_index(cur_mood, songs_mood);
+    return SONGS.get(best_idx as usize).unwrap().to_string();
 }
 
 fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
@@ -135,14 +172,19 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
 
 pub fn get_min_dist_to_song_index(current_mood: MoodScores, songs: Vec<Song>) -> i16{
 
-    let mut min: f32 = f32::MIN;
+    let mut min: f32 = f32::MAX;
     let mut min_idx: usize = 0;
+    let mut rng = rand::rng();
 
     for i in 0..songs.len(){
         let song = songs.get(i).unwrap();
         let song_mood = song_to_mood_scores(song);
         let dist = euclidean_distance(&current_mood, &song_mood);
+        let rand: f64 = rng.random();
         if dist < min{
+            min = dist;
+            min_idx = i;
+        } else if dist == min && rand < 0.33{
             min = dist;
             min_idx = i;
         }
