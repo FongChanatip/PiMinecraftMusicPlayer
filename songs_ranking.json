@@ -214,5 +214,275 @@
         "nostalgic": 0,
         "mysterious": 0,
         "relaxing": 0.5
+    },
+    {
+        "track": "Ki",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.5,
+        "relaxing": 0.0
+    },
+    {
+        "track": "Alpha",
+        "happy": 0.0,
+        "melancholic": 0.1,
+        "hopeful": 0.2,
+        "nostalgic": 0.5,
+        "mysterious": 0.1,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Dead Voxel",
+        "happy": 0.0,
+        "melancholic": 0.4,
+        "hopeful": 0.0,
+        "nostalgic": 0.2,
+        "mysterious": 0.4,
+        "relaxing": 0.0
+    },
+    {
+        "track": "Blind Spots",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.3,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Flake",
+        "happy": 0.2,
+        "melancholic": 0.1,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.1,
+        "relaxing": 0.4
+    },
+    {
+        "track": "Moog City 2",
+        "happy": 0.3,
+        "melancholic": 0.0,
+        "hopeful": 0.1,
+        "nostalgic": 0.2,
+        "mysterious": 0.0,
+        "relaxing": 0.4
+    },
+    {
+        "track": "Concrete Halls",
+        "happy": 0.0,
+        "melancholic": 0.3,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.5,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Biome Fest",
+        "happy": 0.2,
+        "melancholic": 0.1,
+        "hopeful": 0.2,
+        "nostalgic": 0.2,
+        "mysterious": 0.1,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Mutation",
+        "happy": 0.0,
+        "melancholic": 0.4,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.4,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Haunt Muskie",
+        "happy": 0.0,
+        "melancholic": 0.3,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.5,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Warmth",
+        "happy": 0.1,
+        "melancholic": 0.3,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.3,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Floating Trees",
+        "happy": 0.2,
+        "melancholic": 0.1,
+        "hopeful": 0.2,
+        "nostalgic": 0.2,
+        "mysterious": 0.1,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Aria Math",
+        "happy": 0.3,
+        "melancholic": 0.0,
+        "hopeful": 0.2,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
+    },
+    {
+        "track": "Kyoto",
+        "happy": 0.1,
+        "melancholic": 0.1,
+        "hopeful": 0.1,
+        "nostalgic": 0.2,
+        "mysterious": 0.3,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Ballad of the Cats",
+        "happy": 0.2,
+        "melancholic": 0.0,
+        "hopeful": 0.2,
+        "nostalgic": 0.3,
+        "mysterious": 0.0,
+        "relaxing": 0.3
+    },
+    {
+        "track": "Taswell",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.3,
+        "mysterious": 0.1,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Beginning 2",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.2,
+        "mysterious": 0.3,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Dreiton",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.2,
+        "mysterious": 0.2,
+        "relaxing": 0.2
+    },
+    {
+        "track": "The End",
+        "happy": 0.0,
+        "melancholic": 0.3,
+        "hopeful": 0.0,
+        "nostalgic": 0.2,
+        "mysterious": 0.4,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Chirp",
+        "happy": 0.3,
+        "melancholic": 0.0,
+        "hopeful": 0.2,
+        "nostalgic": 0.1,
+        "mysterious": 0.0,
+        "relaxing": 0.4
+    },
+    {
+        "track": "Wait",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.2,
+        "mysterious": 0.2,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Mellohi",
+        "happy": 0.0,
+        "melancholic": 0.4,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.4,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Stal",
+        "happy": 0.0,
+        "melancholic": 0.5,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.3,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Strad",
+        "happy": 0.2,
+        "melancholic": 0.1,
+        "hopeful": 0.2,
+        "nostalgic": 0.2,
+        "mysterious": 0.1,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Eleven",
+        "happy": 0.0,
+        "melancholic": 0.4,
+        "hopeful": 0.0,
+        "nostalgic": 0.1,
+        "mysterious": 0.4,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Ward",
+        "happy": 0.1,
+        "melancholic": 0.3,
+        "hopeful": 0.1,
+        "nostalgic": 0.1,
+        "mysterious": 0.3,
+        "relaxing": 0.1
+    },
+    {
+        "track": "Mall",
+        "happy": 0.2,
+        "melancholic": 0.1,
+        "hopeful": 0.2,
+        "nostalgic": 0.2,
+        "mysterious": 0.1,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Blocks",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.2,
+        "mysterious": 0.2,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Far",
+        "happy": 0.2,
+        "melancholic": 0.1,
+        "hopeful": 0.2,
+        "nostalgic": 0.2,
+        "mysterious": 0.1,
+        "relaxing": 0.2
+    },
+    {
+        "track": "Intro",
+        "happy": 0.1,
+        "melancholic": 0.2,
+        "hopeful": 0.1,
+        "nostalgic": 0.2,
+        "mysterious": 0.2,
+        "relaxing": 0.2
     }
 ]

@@ -1,14 +1,14 @@
 use crate::external_factors;
 
-use dotenv::dotenv;
-use serde::Deserialize;
 use core::f32;
+use dotenv::dotenv;
+use external_factors::{ExternalFactors, get_external_factors};
 use rand::Rng;
 use rand_distr::Distribution;
+use serde::Deserialize;
 use std::{env, fs, io::BufReader};
-use external_factors::{ExternalFactors, get_external_factors};
 
-pub const SONGS: [&str; 24] = [
+pub const SONGS: [&str; 54] = [
     "01 - Key.mp3",
     "02 - Door.mp3",
     "03 - Subwoofer Lullaby.mp3",
@@ -33,18 +33,48 @@ pub const SONGS: [&str; 24] = [
     "22 - Beginning.mp3",
     "23 - Droopy Likes Ricochet.mp3",
     "24 - Droopy Likes Your Face.mp3",
+    "01 - Ki.mp3",
+    "02 - Alpha.mp3",
+    "03 - Dead Voxel.mp3",
+    "04 - Blind Spots.mp3",
+    "05 - Flake.mp3",
+    "06 - Moog City 2.mp3",
+    "07 - Concrete Halls.mp3",
+    "08 - Biome Fest.mp3",
+    "09 - Mutation.mp3",
+    "10 - Haunt Muskie.mp3",
+    "11 - Warmth.mp3",
+    "12 - Floating Trees.mp3",
+    "13 - Aria Math.mp3",
+    "14 - Kyoto.mp3",
+    "15 - Ballad of the Cats.mp3",
+    "16 - Taswell.mp3",
+    "17 - Beginning 2.mp3",
+    "18 - Dreiton.mp3",
+    "19 - The End.mp3",
+    "20 - Chirp.mp3",
+    "21 - Wait.mp3",
+    "22 - Mellohi.mp3",
+    "23 - Stal.mp3",
+    "24 - Strad.mp3",
+    "25 - Eleven.mp3",
+    "26 - Ward.mp3",
+    "27 - Mall.mp3",
+    "28 - Blocks.mp3",
+    "29 - Far.mp3",
+    "30 - Intro.mp3",
 ];
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
-pub struct Song{
+pub struct Song {
     track: String,
     happy: f32,
     melancholic: f32,
     hopeful: f32,
     nostalgic: f32,
     mysterious: f32,
-    relaxing: f32
+    relaxing: f32,
 }
 
 #[derive(Debug, Default)]
@@ -62,7 +92,12 @@ fn sigmoid(x: f32) -> f32 {
 }
 
 fn normalize(mut mood: MoodScores) -> MoodScores {
-    let total = mood.happy + mood.melancholic + mood.hopeful + mood.nostalgic + mood.mysterious + mood.relaxing;
+    let total = mood.happy
+        + mood.melancholic
+        + mood.hopeful
+        + mood.nostalgic
+        + mood.mysterious
+        + mood.relaxing;
     if total != 0.0 {
         mood.happy /= total;
         mood.melancholic /= total;
@@ -74,14 +109,13 @@ fn normalize(mut mood: MoodScores) -> MoodScores {
     mood
 }
 
-pub fn load_song_data() -> Vec<Song>{
+pub fn load_song_data() -> Vec<Song> {
     dotenv().ok();
 
     let path: String = env::var("SONG_JSON_PATH")
         .expect("SONG_JSON_PATH must be set.")
         .parse()
         .unwrap();
-
 
     let file = fs::File::open(path).unwrap();
     let reader = BufReader::new(file);
@@ -118,7 +152,9 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
     if factors.weather.short_forecast.contains("Cloudy") {
         weather_mood.nostalgic += 0.2;
         weather_mood.melancholic += 0.2;
-    } else if factors.weather.short_forecast.contains("Clear") || factors.weather.short_forecast.contains("Sunny") {
+    } else if factors.weather.short_forecast.contains("Clear")
+        || factors.weather.short_forecast.contains("Sunny")
+    {
         weather_mood.happy += 0.2;
         weather_mood.hopeful += 0.2;
     }
@@ -128,21 +164,53 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
 
     // Time-of-day mood
     let time_mood = match factors.time.hour {
-        5..=11 => MoodScores { happy: 0.5, hopeful: 0.5, ..Default::default() },
-        12..=14 => MoodScores { happy: 0.4, relaxing: 0.6, ..Default::default() },
-        15..=17 => MoodScores { nostalgic: 0.5, relaxing: 0.5, ..Default::default() },
-        18..=21 => MoodScores { relaxing: 0.6, melancholic: 0.4, ..Default::default() },
-        _ => MoodScores { mysterious: 0.7, melancholic: 0.3, ..Default::default() },
+        5..=11 => MoodScores {
+            happy: 0.5,
+            hopeful: 0.5,
+            ..Default::default()
+        },
+        12..=14 => MoodScores {
+            happy: 0.4,
+            relaxing: 0.6,
+            ..Default::default()
+        },
+        15..=17 => MoodScores {
+            nostalgic: 0.5,
+            relaxing: 0.5,
+            ..Default::default()
+        },
+        18..=21 => MoodScores {
+            relaxing: 0.6,
+            melancholic: 0.4,
+            ..Default::default()
+        },
+        _ => MoodScores {
+            mysterious: 0.7,
+            melancholic: 0.3,
+            ..Default::default()
+        },
     };
     combined_mood = sum_moods(combined_mood, normalize(time_mood));
     count += 1;
 
     // Season mood
     let season_mood = match factors.time.season.as_str() {
-        "winter" => MoodScores { nostalgic: 1.0, ..Default::default() },
-        "spring" => MoodScores { hopeful: 1.0, ..Default::default() },
-        "summer" => MoodScores { happy: 1.0, ..Default::default() },
-        "fall" => MoodScores { relaxing: 1.0, ..Default::default() },
+        "winter" => MoodScores {
+            nostalgic: 1.0,
+            ..Default::default()
+        },
+        "spring" => MoodScores {
+            hopeful: 1.0,
+            ..Default::default()
+        },
+        "summer" => MoodScores {
+            happy: 1.0,
+            ..Default::default()
+        },
+        "fall" => MoodScores {
+            relaxing: 1.0,
+            ..Default::default()
+        },
         _ => MoodScores::default(),
     };
     combined_mood = sum_moods(combined_mood, season_mood);
@@ -161,7 +229,11 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
 
     // Mercury Retrograde mood
     if factors.mercury_retrograde {
-        let mercury_mood = MoodScores { mysterious: 0.7, melancholic: 0.3, ..Default::default() };
+        let mercury_mood = MoodScores {
+            mysterious: 0.7,
+            melancholic: 0.3,
+            ..Default::default()
+        };
         combined_mood = sum_moods(combined_mood, mercury_mood);
         count += 1;
     }
@@ -169,45 +241,41 @@ fn map_factors_to_mood(factors: ExternalFactors) -> MoodScores {
     normalize(average_mood(combined_mood, count))
 }
 
-
-pub fn get_min_dist_to_song_index(current_mood: MoodScores, songs: Vec<Song>) -> i16{
-
+pub fn get_min_dist_to_song_index(current_mood: MoodScores, songs: Vec<Song>) -> i16 {
     let mut min: f32 = f32::MAX;
     let mut min_idx: usize = 0;
     let mut rng = rand::rng();
 
-    for i in 0..songs.len(){
+    for i in 0..songs.len() {
         let song = songs.get(i).unwrap();
         let song_mood = song_to_mood_scores(song);
         let dist = euclidean_distance(&current_mood, &song_mood);
         let rand: f64 = rng.random();
-        println!("{dist}");
-        if dist < min{
+        if dist < min {
             min = dist;
             min_idx = i;
-        } else if dist == min && rand < 0.33{
+        } else if dist == min && rand < 0.33 {
             min = dist;
             min_idx = i;
         }
     }
 
     return min_idx as i16;
-
 }
 
-pub fn song_to_mood_scores(song: &Song) -> MoodScores{
-    MoodScores { 
-        happy: song.happy, 
-        melancholic: song.melancholic, 
-        hopeful: song.hopeful, 
-        nostalgic: song.nostalgic, 
-        mysterious: song.mysterious, 
-        relaxing: song.relaxing, ..Default::default()
+pub fn song_to_mood_scores(song: &Song) -> MoodScores {
+    MoodScores {
+        happy: song.happy,
+        melancholic: song.melancholic,
+        hopeful: song.hopeful,
+        nostalgic: song.nostalgic,
+        mysterious: song.mysterious,
+        relaxing: song.relaxing,
+        ..Default::default()
     }
 }
 
-fn euclidean_distance(mood1: &MoodScores, mood2: &MoodScores) -> f32{
-
+fn euclidean_distance(mood1: &MoodScores, mood2: &MoodScores) -> f32 {
     let mut sum: f32 = 0.0;
 
     sum += (mood1.happy - mood2.happy).powf(2.0);
@@ -218,7 +286,6 @@ fn euclidean_distance(mood1: &MoodScores, mood2: &MoodScores) -> f32{
     sum += (mood1.relaxing - mood2.relaxing).powf(2.0);
 
     sum.sqrt()
-    
 }
 
 fn sum_moods(a: MoodScores, b: MoodScores) -> MoodScores {
