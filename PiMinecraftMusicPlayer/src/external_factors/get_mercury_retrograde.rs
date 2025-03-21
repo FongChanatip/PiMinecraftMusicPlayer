@@ -1,7 +1,7 @@
 
 use serde_json::Value;
 
-pub async fn get_mercury_retrograde() -> Result<(bool), Box<dyn std::error::Error>> {
+pub async fn get_mercury_retrograde() -> Result<bool, Box<dyn std::error::Error>> {
     let body = reqwest::get("https://mercuryretrogradeapi.com")
         .await?
         .text()
